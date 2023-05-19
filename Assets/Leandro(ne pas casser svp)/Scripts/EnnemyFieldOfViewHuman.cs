@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnnemyFieldOfViewHuman : MonoBehaviour
 {
     private List<GameObject> Players = new List<GameObject>();
     [SerializeField] float RadiusDetection;
-
+    private NavMeshAgent agent;
+    void Awake(){
+        agent = GetComponent<NavMeshAgent>();
+        agent.updateRotation = false;
+        agent.updateUpAxis = false;
+    }
         void OnDrawGizmosSelected()
     {
         // Draw a yellow sphere at the transform's position
@@ -31,10 +37,9 @@ public class EnnemyFieldOfViewHuman : MonoBehaviour
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, (player.transform.position-transform.position).normalized);
                 if (hit.collider != null && hit.collider.transform.parent != null){
                     if(hit.collider.transform.parent.gameObject.tag == "Player"){
-                        print("Juif");
+                        agent.SetDestination(player.transform.position);
                     }
                 }
-                
             }
         }
     }
