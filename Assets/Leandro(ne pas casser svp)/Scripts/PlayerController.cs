@@ -15,19 +15,29 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
     private Vector2 movementInput = Vector2.zero;
     private bool Dash;
+    private List<GameObject> SpawnPoints = new List<GameObject>();
     // Start is called before the first frame update
+    void Awake(){
+        controller = gameObject.GetComponent<CharacterController>();
+        SpawnPoints = GameManager.Instance.SpawnPoints;
+        System.Random random = new System.Random();
+        int index = random.Next(SpawnPoints.Count);
+        controller.enabled = false;
+        transform.position = SpawnPoints[index].transform.position;
+        controller.enabled = true;
+
+    }
     void Start()
     {
-        controller = gameObject.GetComponent<CharacterController>();
+
     }
 
     public void OnMove(InputAction.CallbackContext context){
         movementInput = context.ReadValue<Vector2>();
     }
     public void OnDash(InputAction.CallbackContext context){
-        context.action.started += _ => Dashing();
+        context.action.started += ctx => Dashing();
     }
-
     void Dashing(){
         dashlengthPrivate = DashSpeed;
         dashTimePrivate = DashLength/100;
